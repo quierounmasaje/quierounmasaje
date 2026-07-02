@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservas | Quiero un Masaje</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --beige:#f3eee7;
+      --beige-dark:#d8c9b8;
+      --cream:#fffaf4;
+      --black:#171717;
+      --gray:#6d6a66;
+      --white:#ffffff;
+      --ok:#1f7a4d;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:'Montserrat', sans-serif;
+      background:linear-gradient(180deg,var(--beige),#ffffff);
+      color:var(--black);
+    }
+
+    .app{
+      max-width:480px;
+      margin:0 auto;
+      min-height:100vh;
+      padding:22px;
+    }
+
+    .hero{
+      background:var(--black);
+      color:white;
+      border-radius:28px;
+      padding:26px 22px;
+      margin-bottom:18px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      right:-70px;
+      top:-40px;
+    }
+
+    .brand{
+      font-size:13px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:#e9d9c7;
+      font-weight:700;
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      font-size:30px;
+      line-height:1.05;
+      margin:0 0 10px;
+      font-weight:800;
+    }
+
+    .hero p{
+      margin:0;
+      color:#eee;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .badge{
+      display:inline-block;
+      margin-top:18px;
+      background:#ffffff;
+      color:#111;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(216,201,184,.75);
+      border-radius:24px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .step-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:15px;
+    }
+
+    .number{
+      background:var(--black);
+      color:white;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:13px;
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    h2{
+      margin:0;
+      font-size:18px;
+    }
+
+    .services{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .service{
+      border:1px solid #e4d8cc;
+      background:var(--cream);
+      border-radius:18px;
+      padding:15px;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .service strong{
+      display:block;
+      font-size:15px;
+      margin-bottom:5px;
+    }
+
+    .service span{
+      font-size:13px;
+      color:var(--gray);
+    }
+
+    .service.selected{
+      border:2px solid var(--black);
+      background:#fff;
+      transform:translateY(-1px);
+    }
+
+    .calendar-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .calendar-head button{
+      width:36px;
+      height:36px;
+      border:none;
+      border-radius:50%;
+      background:var(--beige);
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .month{
+      font-weight:800;
+      font-size:15px;
+    }
+
+    .weekdays,.days{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:6px;
+      text-align:center;
+    }
+
+    .weekdays div{
+      color:var(--gray);
+      font-size:11px;
+      font-weight:700;
+      padding:5px 0;
+    }
+
+    .day{
+      border:none;
+      border-radius:12px;
+      padding:11px 0;
+      background:#fff;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .day:disabled{
+      color:#c7c1bb;
+      background:#f3f0ec;
+      cursor:not-allowed;
+    }
+
+    .day.selected{
+      background:var(--black);
+      color:white;
+    }
+
+    .hours{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:9px;
+      margin-top:12px;
+    }
+
+    .hour{
+      border:1px solid #ded2c7;
+      border-radius:14px;
+      background:#fff;
+      padding:12px 0;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .hour.selected{
+      background:var(--black);
+      color:white;
+      border-color:var(--black);
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin:13px 0 6px;
+    }
+
+    input, textarea{
+      width:100%;
+      border:1px solid #d9cec4;
+      border-radius:14px;
+      padding:13px;
+      font-family:'Montserrat', sans-serif;
+      font-size:14px;
+      background:#fff;
+    }
+
+    textarea{
+      min-height:80px;
+      resize:none;
+    }
+
+    .summary{
+      background:var(--cream);
+      border-radius:18px;
+      padding:14px;
+      font-size:13px;
+      color:var(--gray);
+      line-height:1.7;
+    }
+
+    .summary b{color:var(--black)}
+
+    .cta{
+      width:100%;
+      border:none;
+      border-radius:18px;
+      padding:17px;
+      background:var(--ok);
+      color:white;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      font-family:'Montserrat', sans-serif;
+      box-shadow:0 10px 20px rgba(31,122,77,.18);
+    }
+
+    .small{
+      text-align:center;
+      color:var(--gray);
+      font-size:12px;
+      line-height:1.5;
+      margin-top:10px;
+    }
+
+    .error{
+      display:none;
+      background:#fff0f0;
+      border:1px solid #ffd0d0;
+      color:#9d2525;
+      border-radius:14px;
+      padding:12px;
+      font-size:13px;
+      margin-bottom:12px;
+      line-height:1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="brand">QUIERO UN MASAJE</div>
+      <h1>Agenda tu masaje a domicilio</h1>
+      <p>Atención profesional en la comodidad de tu hogar. Reserva por WhatsApp en pocos pasos.</p>
+      <div class="badge">+10 años de experiencia</div>
+    </section>
+
+    <section class="card">
+      <div class="step-title">
+        <div class="number">1</div>
+        <h2>Elige tu servicio</h2>
+      </div>
+      <div class="services" id="services"></div>
+    </section>
+
+    <section class="card">
+      <div class="step-title">
+        <div class="number">2</div>
+        <h2>Selecciona día y hora</h2>
+      </div>
+
+      <div class="calendar-head">
+        <button onclick="changeMonth(-1)" type="button">‹</button>
+        <div class="month" id="monthLabel"></div>
+        <button onclick="changeMonth(1)" type="button">›</button>
+      </div>
+
+      <div class="weekdays">
+        <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+      </div>
+      <div class="days" id="days"></div>
+
+      <div class="hours" id="hours"></div>
+    </section>
+
+    <section class="card">
+      <div class="step-title">
+        <div class="number">3</div>
+        <h2>Tus datos</h2>
+      </div>
+
+      <div class="error" id="errorBox"></div>
+
+      <label>Nombre</label>
+      <input id="nombre" placeholder="Tu nombre" />
+
+      <label>Teléfono</label>
+      <input id="telefono" placeholder="Ej: 9 1234 5678" />
+
+      <label>Comuna</label>
+      <input id="comuna" placeholder="Ej: Ñuñoa, Macul, Providencia" />
+
+      <label>Dirección o referencia</label>
+      <textarea id="direccion" placeholder="Ej: edificio, casa, referencia, estacionamiento, etc."></textarea>
+    </section>
+
+    <section class="card">
+      <div class="step-title">
+        <div class="number">4</div>
+        <h2>Confirmar reserva</h2>
+      </div>
+
+      <div class="summary" id="summary">
+        Selecciona servicio, fecha y hora para ver el resumen.
+      </div>
+
+      <button class="cta" onclick="reservarWhatsApp()">Reservar por WhatsApp</button>
+      <p class="small">Se abrirá WhatsApp con la solicitud lista para enviar.</p>
+    </section>
+  </main>
+
+  <script>
+    // IMPORTANTE: cambia este número por tu WhatsApp.
+    // Formato Chile: 569XXXXXXXX, sin +, sin espacios.
+    const WHATSAPP = "56964518148";
+
+    const services = [
+      {name:"Masaje de relajación", detail:"60 min · Bienestar y descanso", price:"$35.000"},
+      {name:"Masaje descontracturante", detail:"60 min · Espalda, cuello y tensión", price:"$35.000"},
+      {name:"Drenaje linfático", detail:"60 min · Retención e inflamación", price:"$35.000"},
+      {name:"Masaje deportivo", detail:"60 min · Recuperación muscular", price:"$35.000"},
+      {name:"Masaje prenatal", detail:"60 min · Cuidado durante el embarazo", price:"$35.000"},
+      {name:"Masaje postnatal", detail:"60 min · Recuperación y bienestar", price:"$35.000"}
+    ];
+
+    const availableHours = ["09:00","11:00","13:00","15:00","17:00","19:00"];
+
+    let selectedService = null;
+    let selectedDate = null;
+    let selectedHour = null;
+    let current = new Date();
+
+    function renderServices(){
+      const box = document.getElementById("services");
+      box.innerHTML = "";
+      services.forEach((s, index) => {
+        const div = document.createElement("div");
+        div.className = "service";
+        div.innerHTML = `<strong>${s.name}</strong><span>${s.detail} · ${s.price}</span>`;
+        div.onclick = () => {
+          selectedService = s;
+          document.querySelectorAll(".service").forEach(el => el.classList.remove("selected"));
+          div.classList.add("selected");
+          updateSummary();
+        };
+        box.appendChild(div);
+      });
+    }
+
+    function renderCalendar(){
+      const monthLabel = document.getElementById("monthLabel");
+      const daysBox = document.getElementById("days");
+      daysBox.innerHTML = "";
+
+      const year = current.getFullYear();
+      const month = current.getMonth();
+
+      monthLabel.textContent = current.toLocaleDateString("es-CL", {month:"long", year:"numeric"});
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      let start = firstDay.getDay();
+      start = start === 0 ? 6 : start - 1;
+
+      for(let i=0;i<start;i++){
+        const empty = document.createElement("div");
+        daysBox.appendChild(empty);
+      }
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      for(let d=1; d<=lastDay.getDate(); d++){
+        const date = new Date(year, month, d);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "day";
+        btn.textContent = d;
+
+        const isPast = date < today;
+        const isSunday = date.getDay() === 0;
+
+        if(isPast || isSunday){
+          btn.disabled = true;
+        }
+
+        btn.onclick = () => {
+          selectedDate = date;
+          selectedHour = null;
+          document.querySelectorAll(".day").forEach(el => el.classList.remove("selected"));
+          btn.classList.add("selected");
+          renderHours();
+          updateSummary();
+        };
+
+        daysBox.appendChild(btn);
+      }
+    }
+
+    function renderHours(){
+      const box = document.getElementById("hours");
+      box.innerHTML = "";
+      availableHours.forEach(h => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "hour";
+        btn.textContent = h;
+        btn.onclick = () => {
+          selectedHour = h;
+          document.querySelectorAll(".hour").forEach(el => el.classList.remove("selected"));
+          btn.classList.add("selected");
+          updateSummary();
+        };
+        box.appendChild(btn);
+      });
+    }
+
+    function changeMonth(direction){
+      current.setMonth(current.getMonth() + direction);
+      selectedDate = null;
+      selectedHour = null;
+      renderCalendar();
+      document.getElementById("hours").innerHTML = "";
+      updateSummary();
+    }
+
+    function formatDate(date){
+      if(!date) return "";
+      return date.toLocaleDateString("es-CL", {weekday:"long", day:"2-digit", month:"long", year:"numeric"});
+    }
+
+    function updateSummary(){
+      const box = document.getElementById("summary");
+      if(!selectedService && !selectedDate && !selectedHour){
+        box.innerHTML = "Selecciona servicio, fecha y hora para ver el resumen.";
+        return;
+      }
+      box.innerHTML =
+        `<b>Servicio:</b> ${selectedService ? selectedService.name : "Pendiente"}<br>` +
+        `<b>Precio:</b> ${selectedService ? selectedService.price : "Pendiente"}<br>` +
+        `<b>Fecha:</b> ${selectedDate ? formatDate(selectedDate) : "Pendiente"}<br>` +
+        `<b>Hora:</b> ${selectedHour || "Pendiente"}`;
+    }
+
+    function showError(msg){
+      const box = document.getElementById("errorBox");
+      box.style.display = "block";
+      box.textContent = msg;
+      window.scrollTo({top:document.getElementById("errorBox").offsetTop - 80, behavior:"smooth"});
+    }
+
+    function reservarWhatsApp(){
+      const nombre = document.getElementById("nombre").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const comuna = document.getElementById("comuna").value.trim();
+      const direccion = document.getElementById("direccion").value.trim();
+
+      if(WHATSAPP.includes("XXXXXXXX")){
+        showError("Antes de publicar, debes cambiar el número de WhatsApp dentro del código.");
+        return;
+      }
+
+      if(!selectedService || !selectedDate || !selectedHour || !nombre || !telefono || !comuna){
+        showError("Completa servicio, fecha, hora, nombre, teléfono y comuna.");
+        return;
+      }
+
+      document.getElementById("errorBox").style.display = "none";
+
+      const texto =
+`Hola, quiero reservar un masaje a domicilio 😊
+
+Servicio: ${selectedService.name}
+Precio: ${selectedService.price}
+Fecha: ${formatDate(selectedDate)}
+Hora: ${selectedHour}
+
+Nombre: ${nombre}
+Teléfono: ${telefono}
+Comuna: ${comuna}
+Dirección o referencia: ${direccion || "No indicada"}
+
+Quedo atenta/o a la confirmación.`;
+
+      const url = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(texto);
+      window.open(url, "_blank");
+    }
+
+    renderServices();
+    renderCalendar();
+  </script>
+</body>
+</html>
